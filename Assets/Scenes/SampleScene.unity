@@ -438,6 +438,8 @@ GameObject:
   - component: {fileID: 1441340989}
   - component: {fileID: 1441340991}
   - component: {fileID: 1441340990}
+  - component: {fileID: 1441340993}
+  - component: {fileID: 1441340992}
   m_Layer: 5
   m_Name: Game
   m_TagString: Untagged
@@ -461,8 +463,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -1050}
-  m_SizeDelta: {x: 0, y: 1500}
+  m_AnchoredPosition: {x: 0, y: -1020}
+  m_SizeDelta: {x: 0, y: 1440}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1441340990
 MonoBehaviour:
@@ -502,6 +504,38 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1441340988}
   m_CullTransparentMesh: 1
+--- !u!114 &1441340992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1441340988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae5204f5bc71e1a468edede4d1c50335, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cellPrefab: {fileID: 7680885622801476843, guid: e1961e118217ac84cba940ca01ceccf7, type: 3}
+  gridPrefab: {fileID: 7251466037624600725, guid: e5a4eec0e61950347b1ca1db64184e20, type: 3}
+  rowPrefab: {fileID: 1964195738849010950, guid: a0fb36e70d19e47498ccb78a75b920f2, type: 3}
+--- !u!114 &1441340993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1441340988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cd2040cf0c63f24cbdb456199d14e26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapWidth: 10
+  mapHeight: 10
+  startSnakeLength: 5
+  ticksInSecond: 10
+  walls: []
 --- !u!1 &2037655246
 GameObject:
   m_ObjectHideFlags: 0

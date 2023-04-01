@@ -11,15 +11,18 @@ public class Game : MonoBehaviour
 
     private Map map;
     private Snake snake;
+    private GameUI gameUI;
 
     private void Start()
     {
+        gameUI = GetComponent<GameUI>();
         StartGame();
     }
 
     private void StartGame()
     {
         map = new Map(mapWidth, mapHeight, walls);
+        gameUI.CreateGrid(map.Width, map.Height);
         snake = new Snake(new Vector2(mapWidth / 2, mapHeight / 2), startSnakeLength);
         StartCoroutine(TickUpdate(ticksInSecond));
     }
