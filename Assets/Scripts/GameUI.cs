@@ -6,25 +6,32 @@ using UnityEngine.UI;
 public class GameUI : MonoBehaviour
 {
     [SerializeField]
-    private RectTransform cellPrefab, gridPrefab, rowPrefab;
+    private RectTransform cellPrefab, gridPrefab, rowPrefab, snakePrefab, snakeTransform, coinPrefab;
+    [SerializeField]
+    private Sprite snakeHeadSprite, snakeBodySprite, snakeTailSprite;
 
-    private RectTransform gridTransform;
-    private Vector2 imageSize;
+    private RectTransform gridTransform, coinTransform;
+    private List<RectTransform> snakeParts = new List<RectTransform>();
+    private Vector2 imageSize, imagePosition;
+    private float cellSize;
 
     private void Start()
     {
-        imageSize = GetComponent<RectTransform>().rect.size;
-        print(imageSize);
+        RectTransform rect = GetComponent<RectTransform>();
+        imageSize = rect.rect.size;;
+        imagePosition = new Vector2(rect.rect.xMin, rect.rect.yMax);
     }
 
     public void CreateGrid(int width, int height)
     {
+        width += 1;
+        height += 1;
         if (gridTransform != null)
         {
             Destroy(gridTransform.gameObject);
         }
         gridTransform = Instantiate(gridPrefab, transform);
-        float cellSize = 0;
+        cellSize = 0;
         int rowPadding = 0;
         if (width == height || width > height)
         {
@@ -48,5 +55,144 @@ public class GameUI : MonoBehaviour
                 cellTransform.sizeDelta = new Vector2(cellSize, cellSize);
             }
         }
+    }
+
+    public void MoveSnake(Snake snake)
+    {
+        for (int i = 0; i < snake.Length; i++)
+        {
+            RectTransform snakePart = snakeParts[i];
+            snakePart.anchoredPosition = imagePosition +
+                new Vector2(cellSize * (snake.Parts[i].x + 1), -cellSize * (snake.Parts[i].y + 1));
+            if (i == 0)
+            {
+                float rotation = 0;
+                if (snake.CurrentDirection == Vector2.left)
+                {
+                    rotation = -90;
+                }
+                if (snake.CurrentDirection == Vector2.down)
+                {
+                    rotation = -180;
+                }
+                if (snake.CurrentDirection == Vector2.right)
+                {
+                    rotation = 90;
+                }
+                snakePart.rotation = Quaternion.Euler(0, 0, rotation);
+            }
+            if (i == snake.Length - 1)
+            {
+                float rotation = 0;
+                Vector2 direction = snake.Parts[i - 1] - snake.Parts[i];
+                if (direction == Vector2.left)
+                {
+                    rotation = 90;
+                }
+                if (direction == Vector2.up)
+                {
+                    rotation = -180;
+                }
+                if (direction == Vector2.right)
+                {
+                    rotation = -90;
+                }
+                snakePart.rotation = Quaternion.Euler(0, 0, rotation);
+            }
+        }
+    }
+
+    public void CreateSnake(Snake snake)
+    {
+        for (int i = 0; i < snakeParts.Count; i++)
+        {
+            Destroy(snakeParts[i]);
+        }
+        snakeParts.Clear();
+        for (int i = 0; i < snake.Length; i++)
+        {
+            RectTransform snakePart = Instantiate(snakePrefab, snakeTransform);
+            snakePart.sizeDelta = new Vector2(cellSize, cellSize);
+            snakePart.anchoredPosition = imagePosition +
+                new Vector2(cellSize * (snake.Parts[i].x + 1), -cellSize * (snake.Parts[i].y + 1));
+            if (i == 0)
+            {
+                float rotation = 0;
+                if (snake.CurrentDirection == Vector2.left)
+                {
+                    rotation = -90;
+                }
+                if (snake.CurrentDirection == Vector2.down)
+                {
+                    rotation = -180;
+                }
+                if (snake.CurrentDirection == Vector2.right)
+                {
+                    rotation = 90;
+                }
+                snakePart.rotation = Quaternion.Euler(0,0,rotation);
+                snakePart.GetComponent<Image>().sprite = snakeHeadSprite;
+            }
+            if (i == snake.Length - 1)
+            {
+                float rotation = 0;
+                Vector2 direction = snake.Parts[i - 1] - snake.Parts[i];
+                if (direction == Vector2.left)
+                {
+                    rotation = 90;
+                }
+                if (direction == Vector2.up)
+                {
+                    rotation = -180;
+                }
+                if (direction == Vector2.right)
+                {
+                    rotation = -90;
+                }
+                snakePart.rotation = Quaternion.Euler(0, 0, rotation);
+                snakePart.GetComponent<Image>().sprite = snakeTailSprite;
+            }
+            snakeParts.Add(snakePart);
+        }
+    }
+
+    public void AddSnakePart(Snake snake)
+    {
+        int part = snakeParts.Count;
+        RectTransform snakePart = Instantiate(snakePrefab, snakeTransform);
+        snakePart.sizeDelta = new Vector2(cellSize, cellSize);
+        snakePart.anchoredPosition = imagePosition +
+        new Vector2(cellSize * (snake.Parts[part].x + 1), -cellSize * (snake.Parts[part].y + 1));
+        float rotation = 0;
+        Vector2 direction = snake.Parts[part - 1] - snake.Parts[part];
+        if (direction == Vector2.left)
+        {
+            rotation = 90;
+        }
+        if (direction == Vector2.up)
+        {
+            rotation = -180;
+        }
+        if (direction == Vector2.right)
+        {
+            rotation = -90;
+        }
+        snakePart.rotation = Quaternion.Euler(0, 0, rotation);
+        snakePart.GetComponent<Image>().sprite = snakeTailSprite;
+        snakeParts.Add(snakePart);
+        snakeParts[part - 1].GetComponent<Image>().sprite = snakeBodySprite;
+    }
+
+    public void CreateCoin(Vector2 position)
+    {
+        coinTransform = Instantiate(coinPrefab, snakeTransform);
+        MoveCoin(position);
+    }
+
+    public void MoveCoin(Vector2 position)
+    {
+        coinTransform.sizeDelta = new Vector2(cellSize, cellSize);
+        coinTransform.anchoredPosition = imagePosition +
+        new Vector2(cellSize * (position.x + 1), -cellSize * (position.y + 1));
     }
 }

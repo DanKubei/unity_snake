@@ -24,6 +24,9 @@ public class Game : MonoBehaviour
         map = new Map(mapWidth, mapHeight, walls);
         gameUI.CreateGrid(map.Width, map.Height);
         snake = new Snake(new Vector2(mapWidth / 2, mapHeight / 2), startSnakeLength);
+        gameUI.CreateSnake(snake);
+        map.GenerateCoin(snake.Parts.ToArray());
+        gameUI.CreateCoin(map.CoinPostion);
         StartCoroutine(TickUpdate(ticksInSecond));
     }
 
@@ -41,14 +44,21 @@ public class Game : MonoBehaviour
             if (snake.Parts.Contains(map.CoinPostion))
             {
                 snake.AddPart();
+                gameUI.AddSnakePart(snake);
                 map.GenerateCoin(snake.Parts.ToArray());
             }
-            yield return new WaitForSeconds(1 / ticksInSecond);
+            gameUI.MoveSnake(snake);
+            yield return new WaitForSeconds((float)1 / ticksInSecond);
         }
     }
 
     private void GameOver()
     {
         
+    }
+
+    public void ChangeSnakeDirection(Snake.Directions direction)
+    {
+        snake.ChangeDirection(direction);
     }
 }

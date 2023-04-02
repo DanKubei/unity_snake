@@ -3,6 +3,14 @@ using UnityEngine;
 
 public class Snake
 {
+    public enum Directions
+    {
+        Up,
+        Down,
+        Left,
+        Right
+    }
+
     public Vector2 CurrentDirection { get { return direction; } }
     public List<Vector2> Parts { get { return partsPositions; } }
     public int Length { get { return partsPositions.Count; } }
@@ -10,33 +18,29 @@ public class Snake
     private Vector2 direction;
     private List<Vector2> partsPositions = new List<Vector2>();
 
-    private readonly Vector2[] approvedDirections = { Vector2.up, Vector2.down, Vector2.left, Vector2.right };
+    private readonly Vector2[] approvedDirections = { Vector2.up, Vector2.down, Vector2.right, Vector2.left };
 
-    public Snake(Vector2 startPosition, int length)
+    public Snake(Vector2 startPosition, int length, Directions direction = Directions.Up)
     {
-        direction = Vector2.up;
+        ChangeDirection(direction);
         for (int i = 0; i < length; i++)
         {
-            partsPositions.Add(startPosition - direction * i);
+            partsPositions.Add(startPosition + this.direction * i);
         }
     }
 
-    public void ChangeDirection(Vector2 direction)
+    public void ChangeDirection(Directions direction)
     {
-        if (direction == this.direction * -1)
+        if (approvedDirections[(int)direction] == this.direction * -1)
         {
             return;
         }
-        if (!approvedDirections.ToString().Contains(direction.ToString()))
-        {
-            return;
-        }
-        this.direction = direction;
+        this.direction = approvedDirections[(int)direction];
     }
 
     public bool Move()
     {
-        Vector2 lastPosition = partsPositions[0] + direction;
+        Vector2 lastPosition = partsPositions[0] - direction;
         if (partsPositions.Contains(lastPosition))
         {
             return false;
